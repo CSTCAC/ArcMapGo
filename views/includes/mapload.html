@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h1 class="modal-title fs-5">Open Map
+    </h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+
+    <form action="/mapLoad" method="post" encType="multipart/form-data">
+        WARNING - Unsaved Maps will be lost
+
+        <div class="form-group row mb-1">
+            <label for="customFile" class="col-sm-2 col-form-label">Load File</label>
+            <div class="col-sm-10">
+                <input type="file" id="customFile" class="form-control" name="file">
+            </div>
+        </div>
+
+        <div class="modal-footer mt-4">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Open</button>
+        </div>
+    </form>
+</div>

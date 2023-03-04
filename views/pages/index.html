@@ -1,0 +1,244 @@
+{{ template "header" }}
+
+  <div class="row mx-2 h-10">
+
+
+    <div class="col-md-5">
+      <div class="card mx-2 my-2" id="mapPanel">
+        <div class="card-header">
+          Arcitechture Map
+          
+        </div>
+
+        <div class="card mx-2 my-2 px-2 py-2" style="border: none;">
+          <div class="mermaid" style="text-align: center;">
+            flowchart TD
+            {{range .zonesData}}
+              subgraph {{.ASSET_ZONE}}
+                {{.ASSET}}
+                  end
+                  {{end}}
+                  {{range .diagData}}
+                      {{.SOURCE_ASSET_NAME}}--{{print .CONN_ID "<br>" .PROTOCOL ":" .ENCRYPTION}}--> {{.DEST_ASSET_NAME}}
+                            {{end}}
+          </div>
+          <script type="module">
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+            mermaid.initialize({
+              startOnLoad: true,
+              themeVariables: {
+                'primaryColor': '#BB2528',
+                'primaryTextColor': '#fff',
+                'primaryBorderColor': '#7C0000',
+                'lineColor': '#F8B229',
+                'secondaryColor': '#006100',
+                'tertiaryColor': '#fff'
+              }
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="span">
+        <div class="card  mx-2 my-2 ">
+          <div class="card-header">
+
+            <div class="d-flex justify-content-between">
+              <div>Connections</div>
+              <div> <button type="button" class="btn btn-success btn-sm " hx-get="/connectionAdd" hx-target="#modal-body"
+                  _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop" data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop">
+                  Add Connection</button></div>
+            </div>
+          </div>
+      
+
+      
+            <table class="table table-sm table-hover" id="sidePanel">
+              <thead>
+                <tr class="text-xs">
+                  <th class="d-none d-lg-table-cell">Connection ID</th>
+                  <th>Source Application</th>
+                  <th class="d-none d-lg-table-cell">Source Application Zone</th>
+                  <th>Destination Application</th>
+                  <th class="d-none d-lg-table-cell">Destination Application Zone</th>
+                  <th>Protocol</th>
+                  <th class="d-none d-md-table-cell">Encryption</th>
+                  <th class="d-none d-xl-table-cell">Server Authentication</th>
+                  <th class="d-none d-xl-table-cell">Client Authentication</th>
+                  <th class="d-none d-xl-table-cell">Client Authorisation</th>
+                  <th class="d-none d-xxl-table-cell">Server CRL</th>
+                  <th class="d-none d-xxl-table-cell">Client CRL</th>
+                  <th class="d-none d-xxl-table-cell">Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{range .connectionsData}}
+                  <tr class="text-xs">
+                    <td class="d-none d-lg-table-cell">
+                      {{.CONN_ID}}
+                    </td>
+                    <td>
+                      {{.SOURCE_ASSET_NAME}}
+                    </td>
+                    <td class="d-none d-lg-table-cell">
+                      {{.SOURCE_ASSET_ZONE}}
+                    </td>
+                    <td>
+                      {{.DEST_ASSET_NAME}}
+                    </td>
+                    <td class="d-none d-lg-table-cell">
+                      {{.DEST_ASSET_ZONE}}
+                    </td>
+                    <td>
+                      {{.PROTOCOL}}
+                    </td>
+                    <td class="d-none d-md-table-cell">
+                      {{.ENCRYPTION}}
+                    </td>
+                    <td class="d-none d-xl-table-cell">
+                      {{.SERVER_AUTHENTICATION}}
+                    </td>
+                    <td class="d-none d-xl-table-cell">
+                      {{.CLIENT_AUTHENTICATION}}
+                    </td>
+                    <td class="d-none d-xl-table-cell">
+                      {{.CLIENT_AUTHORISATION}}
+                    </td>
+                    <td class="d-none d-xxl-table-cell">
+                      {{.SERVER_CRL}}
+                    </td>
+                    <td class="d-none d-xxl-table-cell">
+                      {{.CLIENT_CRL}}
+                    </td>
+                    <td class="d-none d-xxl-table-cell">
+                      {{.DESCRIPTION}}
+                    </td>
+                    <td>
+
+                      <button type="button" class="btn btn-success btn-sm" hx-get="/connectionClone/{{.CONN_ID}}"
+                        hx-target="#modal-body" _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Clone
+                      </button>
+
+                      <button type="button" class="btn btn-warning btn-sm " hx-get="/connectionEdit/{{.CONN_ID}}"
+                        hx-target="#modal-body" _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Edit
+                      </button>
+
+                      <button type="button" class="btn btn-danger btn-sm" hx-get="/connectionDelete/{{.CONN_ID}}"
+                        hx-target="#modal-body" _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Delete
+                      </button>
+
+                    </td>
+                  <tr>
+                    {{end}}
+              </tbody>
+            </table>
+          
+        </div>
+      </div>
+      <div class="span">
+
+
+        <div class="card  mx-2 my-2 ">
+          <div class="card-header">
+            <div class="bg-light d-flex justify-content-between">
+              <div>Assets</div>
+              <div> <button type="button" class="btn btn-success btn-sm" hx-get="/assetAdd" hx-target="#modal-body"
+                  _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop" data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop">
+                  Add Asset
+                </button></div>
+            </div>
+
+          </div>
+
+          
+
+            <table class="table table-hover" id="sidePanel">
+              <thead>
+                <tr>
+                  <th class="d-none d-lg-table-cell">Application ID</th>
+                  <th>Application<br>Name</th>
+                  <th>Trust<br>Zone</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+               
+    
+
+                {{range .assetsData}}
+                  <tr>
+                    <td class="d-none d-lg-table-cell">
+                      {{.ASSET_ID}}
+                    </td>
+                    <td>
+                      {{.ASSET_NAME}}
+                    </td>
+                    <td>
+                      {{.ASSET_ZONE}}
+                    </td>
+                    <td>
+                      {{.DESCRIPTION}} 
+                    </td>
+                    <td>
+
+                      <button type="button" class="btn btn-warning btn-sm" hx-get="/assetEdit/{{.ASSET_ID}}"
+                        hx-target="#modal-body" _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Edit
+                      </button>
+
+                      <button type="button" class="btn btn-danger btn-sm" hx-get="/assetDelete/{{.ASSET_ID}}"
+                        hx-target="#modal-body" _="on htmx:afterOnLoad wait 10ms then add .show to #staticBackdrop"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Delete
+                      </button>
+
+                    </td>
+                  <tr>
+                    {{end}}
+              </tbody>
+            </table>
+          
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+  <div class="modal modal-xl fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" id="modal-body">
+      </div>
+    </div>
+  </div>
+ 
+ 
+
+
+  {{template "footer"}}
+
+  
